@@ -3,21 +3,21 @@ CFLAGS = -g -Wall -Wextra -pedantic
 OBJS = k.o
 
 PREFIX = /usr/local/share
-INSTALLPATH = $(PREFIX)/kfreestyle2d/
+INSTALLPATH = $(PREFIX)/kfreestylemacd/
 GROUP = uinput
 GROUPADD_PATH = /usr/sbin/groupadd
 
-kfreestyle2d: $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o kfreestyle2d
+kfreestylemacd: $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o kfreestylemacd
 
-systemd: kfreestyle2d.service.template
-	cat kfreestyle2d.service.template | sed 's|<<<PREFIX>>>|$(PREFIX)|g' \
-	| sed 's|<<<GROUP>>>|$(GROUP)|g' > /etc/systemd/system/kfreestyle2d.service
+systemd: kfreestylemacd.service.template
+	cat kfreestylemacd.service.template | sed 's|<<<PREFIX>>>|$(PREFIX)|g' \
+	| sed 's|<<<GROUP>>>|$(GROUP)|g' > /etc/systemd/system/kfreestylemacd.service
 
-# Create a copy of the udev rules 
-udev-rule: ./99-kfreestyle2d.rules.template
-	cat 99-kfreestyle2d.rules.template | sed 's|<<<GROUP>>>|$(GROUP)|g' \
-	> /etc/udev/rules.d/99-kfreestyle2d.rules
+# Create a copy of the udev rules
+udev-rule: ./99-kfreestylemacd.rules.template
+	cat 99-kfreestylemacd.rules.template | sed 's|<<<GROUP>>>|$(GROUP)|g' \
+	> /etc/udev/rules.d/99-kfreestylemacd.rules
 
 # Create a copy of the script in the prefix directory
 script: ./sort-and-run.sh.template directory
@@ -37,10 +37,10 @@ directory:
 
 # Copy the binary to its new home. Unlink any existing file first in case the
 # service is already running.
-binary: directory kfreestyle2d
-	rm -f $(INSTALLPATH)/kfreestyle2d
-	cp kfreestyle2d $(INSTALLPATH)/kfreestyle2d
-	chgrp $(GROUP) $(INSTALLPATH)/kfreestyle2d
+binary: directory kfreestylemacd
+	rm -f $(INSTALLPATH)/kfreestylemacd
+	cp kfreestylemacd $(INSTALLPATH)/kfreestylemacd
+	chgrp $(GROUP) $(INSTALLPATH)/kfreestylemacd
 
 # Make systemd and udev notice their new configurations
 refresh:
@@ -52,6 +52,6 @@ refresh:
 module:
 	grep -e "uinput" /etc/modules > /dev/null 2>&1 || echo "uinput" >> /etc/modules
 	modprobe uinput
-	
+
 install: group systemd udev-rule script binary module refresh
-	
+

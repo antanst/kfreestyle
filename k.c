@@ -17,6 +17,7 @@
 #define PREV KEY_PREVIOUSSONG
 #define PLAY KEY_PLAYPAUSE
 #define NEXT KEY_NEXTSONG
+#define SLP  KEY_SLEEP
 
 // Maps from events received on the raw hid device to events sent out on uinput device
 const unsigned char mapping[256] = {
@@ -30,9 +31,9 @@ const unsigned char mapping[256] = {
     /* 6 */    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     /* 7 */    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     /* 8 */    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    /* 9 */    0,    0, CALC,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    /* 9 */    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     /* A */    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    /* B */    0,    0,    0, NEXT, PREV,    0,    0,    0, EJCT,    0,    0,    0,    0,    0,    0,    0,
+    /* B */    0,    0,    0,    0,    0,    NEXT, PREV, 0, EJCT,    0,    0,    0,    0,    0,    0,    0,
     /* C */    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0, PLAY,    0,    0,
     /* D */    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     /* E */    0,    0, MUTE,    0,    0,    0,    0,    0,    0,  VUP, VDWN,    0,    0,    0,    0,    0,
@@ -61,7 +62,7 @@ void emit(int fd, int type, int code, int val) {
 }
 
 // Assume fd is the file descriptor of a raw hid file for
-// a Kinesis Freestyle 2
+// a Kinesis Freestyle mac
 // Use UDEV4 style initialization
 void watch(int rawfd) {
 
@@ -100,7 +101,7 @@ void watch(int rawfd) {
     usetup.id.bustype = BUS_USB;
     usetup.id.vendor = 0x058f; // Alcor Micro Corp. Same as real keyboard
     usetup.id.product = 0x9410; // Keyboard
-    strcpy(usetup.name, "KB800 Kinesis Freestyle");
+    strcpy(usetup.name, "KB700 Kinesis Freestyle");
 
     // Create virtual device
     #if UINPUT_VERSION>=5
@@ -130,6 +131,7 @@ void watch(int rawfd) {
 
         key = mapping[data[1]];
         if (key) {
+            //printf("Known HID Usage ID: 0x%x\n", data[1]);
             KINESIS_SEND_KEY(key, fd);
         }
         else if (data[1]) {
