@@ -4,7 +4,7 @@ Unofficial Kinesis Freestyle Mac Userspace Linux Driver
 ## Difference between kfreestylemacd and kfreestyle2d
 
 This project is a direct fork of the [Freestyle 2 driver by Christopher Waldon](https://github.com/whereswaldon/kfreestyle2d).
-The keycodes are changed to the ones used by the Freestyle Mac edition so make it usable on a Linux computer. The name was changed to kfreestylemac to reflect this change, but all other code, including the rest of this readme, was left as written by Christopher.
+The keycodes are changed to the ones used by the Freestyle Mac edition so to make it usable on a Linux computer. The name was changed to kfreestylemacd to reflect this change, but all other code, including the rest of this readme, was left as written by Christopher.
 
 
 
